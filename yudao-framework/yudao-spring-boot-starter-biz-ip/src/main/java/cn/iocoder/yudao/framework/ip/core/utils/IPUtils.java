@@ -3,9 +3,10 @@ package cn.iocoder.yudao.framework.ip.core.utils;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.iocoder.yudao.framework.ip.core.Area;
 import lombok.SneakyThrows;
-import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.lionsoul.ip2region.xdb.Searcher;
+
+import java.io.IOException;
 
 /**
  * IP 工具类
@@ -15,29 +16,30 @@ import org.lionsoul.ip2region.xdb.Searcher;
  * @author wanglhup
  */
 @Slf4j
-@UtilityClass
 public class IPUtils {
+
+    /**
+     * 初始化 SEARCHER
+     */
+    @SuppressWarnings("InstantiationOfUtilityClass")
+    private final static IPUtils INSTANCE = new IPUtils();
 
     /**
      * IP 查询器，启动加载到内存中
      */
     private static Searcher SEARCHER;
 
-    static {
-        init();
-    }
-
     /**
-     * 初始化
+     * 私有化构造
      */
-    private static void init() {
+    private IPUtils() {
         try {
             long now = System.currentTimeMillis();
             byte[] bytes = ResourceUtil.readBytes("ip2region.xdb");
             SEARCHER = Searcher.newWithBuffer(bytes);
             log.info("启动加载 IPUtils 成功，耗时 ({}) 毫秒", System.currentTimeMillis() - now);
-        } catch (Exception e) {
-            throw new RuntimeException("IPUtils 初始化失败", e);
+        } catch (IOException e) {
+            log.error("启动加载 IPUtils 失败", e);
         }
     }
 

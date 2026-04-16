@@ -11,7 +11,6 @@ import cn.iocoder.yudao.framework.common.util.json.JsonUtils;
  */
 public interface WebSocketSenderApi {
 
-
     /**
      * 发送消息给指定用户
      *
